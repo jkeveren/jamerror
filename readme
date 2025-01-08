@@ -3,32 +3,32 @@ jamerror
 C++ error handling strategy.
 
 Goals:
-	- Make it obvious that a function is cabapble of producing an error.
-	- Have errors represented in a standardised way.
-	- Control the depth of error that is visible to the error handler.
+  - Make it obvious that a function is cabapble of producing an error.
+  - Have errors represented in a standardised way.
+  - Control the depth of error that is visible to the error handler.
 
 Alternatives
-	Exceptions:
-		- Nice for implicit error handling thanks to how it "bubbles" errors up to
-			the nearest catch statement.
-		- Providing additinal context for an error requires a try catch block at
-			multiple level which can be a little more cumbersome that say, returning
-			an error and checking it.
-		- Hides the possibility of throwing an exception in documentation or maybe
-			"noexcept" in the header file.
-	std::expected:
-		- Similar to the loved and hated returning of errors in Go.
-		- Good at explicitly shoing that a function can error.
-		- Can be a little clunky to frequenctly use "std::exception<T, E>",
-			"expected.has_value()", "expected.error()", etc.
-		- Costs unnecessary CPU cycles when calling a small function many times due
-			to the frequent instantiation of the "std::expected" class even if there
-			is no error.
-	Invalid returns:
-		- Returning NULL, -1 or who knows what? go read the docs again.
-		- Very compact as it uses the existing return value to communicate that
-			something went wrong.
-		- Often requires more detail, i.e. provided by "errno" or some other state
-			that must be managed.
-		- Good for extreme efficiency but casn be a little messy and error prone.
+  Exceptions:
+    - Nice for implicit error handling thanks to how it "bubbles" errors up to
+      the nearest catch statement.
+    - Providing additinal context for an error requires a try catch block at
+      multiple level which can be a little more cumbersome that say, returning
+      an error and checking it.
+    - Hides the possibility of throwing an exception in documentation or maybe
+      "noexcept" in the header file.
+  std::expected:
+    - Similar to the loved and hated returning of errors in Go.
+    - Good at explicitly shoing that a function can error.
+    - Can be a little clunky to frequenctly use "std::exception<T, E>",
+      "expected.has_value()", "expected.error()", etc.
+    - Costs unnecessary CPU cycles when calling a small function many times due
+      to the frequent instantiation of the "std::expected" class even if there
+      is no error.
+  Invalid returns:
+    - Returning NULL, -1 or who knows what? go read the docs again.
+    - Very compact as it uses the existing return value to communicate that
+      something went wrong.
+    - Often requires more detail, i.e. provided by "errno" or some other state
+      that must be managed.
+    - Good for extreme efficiency but casn be a little messy and error prone.
 
