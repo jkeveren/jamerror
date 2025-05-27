@@ -9,7 +9,7 @@ Goals
 
 Usage
   This is a simple class with the same name as the title of this document. It's
-  external API is as follows:
+  public API is as follows:
   {
   	
   }
@@ -21,19 +21,18 @@ Exceptions
 - Nice for implicit error handling thanks to how it "bubbles" errors up to
   the nearest catch statement.
 - Providing additional context for an error requires a try catch block at
-  multiple level which can be a little more cumbersome that say, returning
+  every level which can be a little more cumbersome that say, returning
   an error and checking it.
-- Hides the possibility of throwing an exception in documentation or maybe
-  "noexcept" in the header file.
+- Makes it unobvious if a function can throw an exception unless it's defined as
+  "noexcept". Should we try-catch every function that'd not noexcept?
 
 std::expected
 - Similar to the loved and hated returning of errors in Go.
 - Good at explicitly showing that a function can error.
-- Can be a little clunky to frequently use "std::exception<T, E>",
+- Can be a little clunky to frequently use "std::expected<T, E>",
   "expected.has_value()", "expected.error()", etc.
-- Costs unnecessary CPU cycles when calling a small function many times due
-  to the frequent instantiation of the "std::expected" class even if there
-  is no error.
+- std::expected get instantiated on every function call that uses it even when
+  there is no error.
 
 Invalid returns
 - Returning NULL, -1 or who knows what? go read the docs again.
