@@ -6,5 +6,19 @@ set -e
 
 mkdir -p obj bin
 
-g++ -c -I include src/jamerror.cpp -o obj/jamerror.o
+g++ \
+-Wfatal-errors -Werror \
+-Wall -Wextra -Wpedantic \
+-Wfloat-equal -Wsign-conversion -Wfloat-conversion \
+-Wno-error=unused-but-set-parameter \
+-Wno-error=unused-but-set-variable \
+-Wno-error=unused-function \
+-Wno-error=unused-label \
+-Wno-error=unused-local-typedefs \
+-Wno-error=unused-parameter \
+-Wno-error=unused-result \
+-Wno-error=unused-variable \
+-Wno-error=unused-value \
+-c -I include src/jamerror.cpp -o obj/jamerror.o
+
 ar rs bin/jamerror.a obj/jamerror.o
