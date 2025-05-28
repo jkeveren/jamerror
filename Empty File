@@ -1,7 +1,0 @@
-process
-	do thing 1
-		context for thing 1
-		other context for thing 1
-			info about other context
-	do thing 2
-		reason for thing 2
