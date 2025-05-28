@@ -1,25 +1,68 @@
 jamerror
+========
 
 C++ error handling strategy for high quality user feedback and intentional
 public APIs.
 
+
+
 Goals
+-----
 - Make it obvious that a function may error.
 - Have errors represented in a standardised way so checking for them is the same
   every time.
 - Control the depth of error that is visible to the public API user.
 
-Usage
-  This is a simple class with the same name as the title of this document. It's
-  public API is as follows:
-  {
-  	
+
+
+Reference
+---------
+
+See the jamerror header for class reference: ./include/jamerror.hpp.
+
+
+
+Usage Example
+-------------
+
+#include "jamerror.hpp"
+
+void function_that_can_error(jamerror& err) {
+  err.append("Error running function that can error.");
+  return;
+}
+
+int main() {
+  jamerror err;
+
+  function_that_can_error(err);
+  if (err) {
+    err.append("Error running program!").print();
+    return 1;
   }
+
+  // You can re-use the jamerror!
+  function_that_can_error(err);
+  if (err) {
+    err.append("Error running program!").print();
+    return 1;
+  }
+}
+
+
+
+Build
+-----
+
+Run ./build, static library archive is generated in ./bin/.
+
 
 
 Alternatives
+------------
 
 Exceptions
+
 - Nice for implicit error handling thanks to how it "bubbles" errors up to
   the nearest catch statement.
 - Providing additional context for an error requires a try catch block at
@@ -31,7 +74,9 @@ Exceptions
   decisions based on, therefore making your public API dependent on your
   implementation. Better have a tight specification!.
 
+
 std::expected
+
 - Similar to the loved and hated returning of errors in Go.
 - Good at explicitly showing that a function can error.
 - Can be a little clunky to frequently use "std::expected<T, E>",
@@ -39,7 +84,9 @@ std::expected
 - std::expected get instantiated on every function call that uses it even when
   there is no error.
 
+
 Invalid returns
+
 - Returning NULL, -1 or who knows what? go read the docs again.
 - Very compact as it uses the existing return value to communicate that
   something went wrong.
