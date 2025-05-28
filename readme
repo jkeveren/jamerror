@@ -25,6 +25,9 @@ Exceptions
   an error and checking it.
 - Makes it unobvious if a function can throw an exception unless it's defined as
   "noexcept". Should we try-catch every function that'd not noexcept?
+- Can expose implementation specific exceptions which API users can make
+  decisions based on, therefore making your public API dependent on your
+  implementation. Better have a tight specification!.
 
 std::expected
 - Similar to the loved and hated returning of errors in Go.
