@@ -37,7 +37,8 @@ int main() {
 
   function_that_can_error(err);
   if (err) {
-    err.append("Error running program!").print();
+    err.append("Error running program!");
+    err.print();
     return 1;
   }
 
@@ -74,7 +75,6 @@ Exceptions
   decisions based on, therefore making your public API dependent on your
   implementation. Better have a tight specification!.
 
-
 std::expected
 
 - Similar to the loved and hated returning of errors in Go.
@@ -83,7 +83,6 @@ std::expected
   "expected.has_value()", "expected.error()", etc.
 - std::expected get instantiated on every function call that uses it even when
   there is no error.
-
 
 Invalid returns
 
