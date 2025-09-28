@@ -28,13 +28,11 @@ class tester {
 	
 	int
 	summary() {
-		std::cout << passing_test_count << "/" << test_count << " tests passed." << std::endl;
-		
 		if (passing_test_count == test_count) {
-			std::cout << "All tests passed!" << std::endl;
+			std::cout << passing_test_count << "/" << test_count << " tests passed." << std::endl << "All tests passed!" << std::endl;
 			return 0;
 		} else {
-			std::cout << "FAIL!" << std::endl;
+			std::cout << test_count - passing_test_count << "/" << test_count << " tests failed." << std::endl << "FAIL!" << std::endl;
 			return 1;
 		}
 	}
@@ -98,6 +96,19 @@ int main() {
 			std::string actual = err.message_log_for_humans_only();
 			t.test<std::string>(desc + "from getter", actual == expected, expected, actual);
 		}
+	}
+	
+	{
+		std::string desc = "clear() clears the error ";
+		
+		jamerror err;
+		err.append("Example error.");
+		err.clear();
+		
+		t.test<int>(desc + "status", err.status == jamerror::status_ok, jamerror::status_ok, err.status);
+		
+		std::string message_log = err.message_log_for_humans_only();
+		t.test<std::string>(desc + "message_log", message_log.empty(), "", message_log);
 	}
 	
 	return t.summary();
