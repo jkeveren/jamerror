@@ -1,48 +1,52 @@
 #include "jamerror.hpp"
 
 #include <iostream>
+#include <system_error>
 
 #include <string.h>
 
-jamerror::jamerror() : reason{reason_none} {}
+jamerror::jamerror() noexcept : status{status_ok} {}
 
-jamerror::jamerror(const std::string &message, int reason) {
-	append(message, reason);
+jamerror::jamerror(const std::string &message, int status) {
+	append(message, status);
 }
 
-jamerror::operator bool() const {
-	return reason != reason_none;
+jamerror::operator bool() const noexcept {
+	return status != status_ok;
 }
 
 jamerror &
-jamerror::append(const std::string &message, int reason) {
-	this->reason = reason;
+jamerror::append(const std::string &message, int status) {
+	this->status = status;
+
 	if (message.size() == 0) {
 		return *this;
 	}
-	
-	message_stack += message;
-	
+
+	message_log += message;
+
 	// Add newline if it is not already present.
-	if (message_stack[message_stack.size() - 1] != '\n') {
-		message_stack += '\n';
+	if (message_log[message_log.size() - 1] != '\n') {
+		message_log += '\n';
 	}
-			
+
 	return *this;
+}
+
+jamerror &
+jamerror::append_errno() noexcept {
+	std::error_code error_code(errno, std::system_category());
+	
+	return append(error_code.message() + ".");
 }
 
 int
 jamerror::print() const {
-	std::cerr << message_stack << std::flush;
-	// fputs(message_stack.c_str(), stderr);
-	// std::cerr << message_stack << std::flush; // Message stack already ends witha newline, no need to add one.
-	return reason;
+	std::cerr << message_log << std::flush;
+	return status;
 }
 
-jamerror
-jamerror::strerror() {
-	// This looks weird because the GNU version of strerror_r is weird and this is compatible.
-	char *message = static_cast<char *>(alloca(100));
-	message = strerror_r(errno, message, sizeof(message));
-	return append(std::string(message) + ".");
+const std::string&
+jamerror::message_log_for_humans_only() const noexcept {
+	return message_log;
 }

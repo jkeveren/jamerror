@@ -1,66 +1,111 @@
-jamerror
-========
+
+
+                                 jamerror
+
+================================================================================
 
 C++ error handling strategy for high quality user feedback and intentional
 public APIs.
 
 
-
 Goals
------
+--------------------------------------------------------------------------------
+
 - Make it obvious that a function may error.
 - Have errors represented in a standardised way so checking for them is the same
   every time.
 - Control the depth of error that is visible to the public API user.
 
 
+How to Use
+--------------------------------------------------------------------------------
 
-Reference
----------
-
-See the jamerror header for class reference: ./include/jamerror.hpp.
-
-
-
-Usage Example
--------------
-
+// Include the header
 #include "jamerror.hpp"
 
-void function_that_can_error(jamerror& err) {
-  err.append("Error running function that can error.");
-  return;
+// Define your functions with a jamerror reference argument.
+// It's imperitive that it's a reference or at least a pointer so the original
+// instance gets modified.
+void function_that_can_fail(jamerror& err) {
+
+  // If an error occurs in the function, append a message to the error.
+  if (/* your error condition */) {
+    err.append("Error running function that can fail.");
+    return;
+  }
 }
 
 int main() {
+  // Declare your jamerror.
   jamerror err;
+  // Each thread should declare it's own jamerror. Sharing between threads could
+  // result in errors from one thread being visible in another.
 
-  function_that_can_error(err);
+  // Call your function that can fail and pass the error reference.
+  function_that_can_fail(err);
+  // Check to see if the function failed.
   if (err) {
+    // Add more information at this higher level if you want to.
     err.append("Error running program!");
-    err.print();
-    return 1;
+
+    // Print the error message log to stderr.
+    // This also returns the error status which is set to 1 by append by default
+    // so can be used as the exit code for the program too.
+    return err.print();
   }
 
-  // You can re-use the jamerror!
-  function_that_can_error(err);
+  // Assuming you always exit on failure or clear a non-fatal error, you can re-use the jamerror.
+  function_that_can_fail(err);
   if (err) {
-    err.append("Error running program!").print();
-    return 1;
+    return err.append("Error running program!").print();
+  }
+}
+
+// You can also define your own error statuses to allow branching on different
+// errors in a way that gives you control over the public API of your function.
+// Start your custom error status ints at 2 because 0 and 1 are used for
+// "jamerror::status_ok" and "jamerror::status_internal_error" already.
+
+// You probably wouldn't want to do this after your main function like this but
+// this is just an example.
+
+static constexpr my_custom_error_status = 2; // Or use an enum
+
+void another_function_that_can_fail(jamerror& err) {
+  if (/* your error condition */) {
+    err.append("Error running function that can fail.", my_custom_error_status);
+    return;
   }
 }
 
 
+Reference
+--------------------------------------------------------------------------------
+
+See the jamerror header at "include/jamerror.hpp", it has a lot of explanatory
+comments.
+
+
+Development
+--------------------------------------------------------------------------------
 
 Build
 -----
 
-Run ./build, static library archive is generated in ./bin/.
+Run "./build", archive is generated in "./bin/".
 
+Test
+----
+
+1. cd into "test/"
+2. run "./run_test"
+
+This will recompile the library and test suite (both are tiny) and run the
+tests.
 
 
 Alternatives
-------------
+--------------------------------------------------------------------------------
 
 Exceptions
 
@@ -70,7 +115,7 @@ Exceptions
   every level which can be a little more cumbersome that say, returning
   an error and checking it.
 - Makes it unobvious if a function can throw an exception unless it's defined as
-  "noexcept". Should we try-catch every function that'd not noexcept?
+  "noexcept". Should we try-catch every function that's not noexcept?
 - Can expose implementation specific exceptions which API users can make
   decisions based on, therefore making your public API dependent on your
   implementation. Better have a tight specification!.

@@ -1,7 +1,11 @@
 #!/bin/bash
 
-mkdir -p obj bin || exit 1
+test_suite=$(mktemp) || exit 1
 
+printf "Compiling jamerror...\n"
+(cd .. && ./build) || exit 2
+
+printf "Compiling test suite...\n"
 g++ \
 -Wfatal-errors -Werror \
 -Wall -Wextra -Wpedantic \
@@ -15,6 +19,11 @@ g++ \
 -Wno-error=unused-result \
 -Wno-error=unused-variable \
 -Wno-error=unused-value \
--c -I include src/jamerror.cpp -o obj/jamerror.o || exit 2
+-I ../include \
+test.cpp \
+../bin/libjamerror.a \
+-o $test_suite \
+|| exit 3
 
-ar rcs bin/libjamerror.a obj/jamerror.o || exit 3
+printf "Running test suite...\n"
+$test_suite || exit 4
