@@ -87,22 +87,16 @@ See the jamerror header at "include/jamerror.hpp", it has a lot of explanatory
 comments.
 
 
-Development
+GNU Make Commands
 --------------------------------------------------------------------------------
 
-Build
------
+Build: "make", archive is generated in "./bin/".
 
-Run "./build", archive is generated in "./bin/".
+Test: "make test"
 
-Test
-----
+Install: "make install"
 
-1. cd into "test/"
-2. run "./run_test"
-
-This will recompile the library and test suite (both are tiny) and run the
-tests.
+Uninstall: "make uninstall"
 
 
 Alternatives
