@@ -38,7 +38,9 @@ test: test/test
 
 install: bin/libjamerror.a include/jamerror.hpp
 	cp bin/libjamerror.a /usr/local/lib/
+	chmod a=r,u=rw /usr/local/lib/libjamerror.a
 	cp include/jamerror.hpp /usr/local/include/
+	chmod a=r,u=rw /usr/local/include/jamerror.hpp
 
 uninstall:
 	rm /usr/local/lib/libjamerror.a
