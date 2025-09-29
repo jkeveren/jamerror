@@ -54,7 +54,8 @@ int main() {
     return err.print();
   }
 
-  // Assuming you always exit on failure or clear a non-fatal error, you can re-use the jamerror.
+  // Assuming you always exit on failure or clear a non-fatal error with
+  // err.clear(), you can re-use the jamerror.
   function_that_can_fail(err);
   if (err) {
     return err.append("Error running program!").print();

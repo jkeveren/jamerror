@@ -66,4 +66,9 @@ class jamerror {
 	// Don't parse this string and branch based on it. That's what status is for.
 	const std::string &
 	message_log_for_humans_only() const noexcept;
+	
+	// Clears the error so it can be re-used.
+	// Useful when an error is non-fatal so you don't need to allocate a new jamerror.
+	jamerror&
+	clear() noexcept;
 };

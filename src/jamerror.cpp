@@ -50,3 +50,10 @@ const std::string&
 jamerror::message_log_for_humans_only() const noexcept {
 	return message_log;
 }
+
+jamerror&
+jamerror::clear() noexcept {
+	status = status_ok;
+	message_log.clear();
+	return *this;
+}
